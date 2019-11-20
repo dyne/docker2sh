@@ -67,24 +67,20 @@ def parse_instruction(inst, dfile=None):
             'STOPSIGNAL', 'USER', 'VOLUME', 'WORKDIR']
 
     if ins == 'ADD':
-        cmds.remove(ins)
         val = val.replace('$', '\\$')
         args = val.split(' ')
         return 'wget -O %s %s\n' % (args[1], args[0])
 
     if ins == 'ARG':
-        cmds.remove(ins)
         return '%s\n' % val
 
     if ins == 'ENV':
-        cmds.remove(ins)
         if '=' not in val:
             val = val.replace(' ', '=', 1)
         val = val.replace('$', '\\$')
         return 'export %s\n' % val
 
     if ins == 'RUN':
-        cmds.remove(ins)
         # Replace `` with $()
         while '`' in val:
             val = val.replace('`', '"$(', 1)
@@ -92,11 +88,9 @@ def parse_instruction(inst, dfile=None):
         return '%s\n' % val.replace('$', '\\$')
 
     if ins == 'WORKDIR':
-        cmds.remove(ins)
         return 'mkdir -p %s && cd %s\n' % (val, val)
 
     if ins == 'COPY':
-        cmds.remove(ins)
         if '/' in dfile:
             return compress_and_b64(val, basepath=dirname(dfile))
         return compress_and_b64(val)
@@ -106,6 +100,7 @@ def parse_instruction(inst, dfile=None):
         return '#\n# %s not implemented\n# Instruction: %s %s\n#\n' % \
             (ins, ins, val)
 
+    # Silently ignore unknown instructions
     return ''
 
 
