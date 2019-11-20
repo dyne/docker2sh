@@ -50,7 +50,7 @@ def compress_and_b64(file, basepath=None):
     comp = compress(file.encode())
     b64 = b64encode(comp)
 
-    cat = 'cat << __EOFF__ | base64 -d | bunzip2 | sudo tee %s >/dev/null' % (spl[1])
+    cat = 'cat << __EOFF__ | base64 -d | bunzip2 > %s' % (spl[1])
     return '\n'.join([cat, b64.decode(), '__EOFF__']) + '\n'
 
 
