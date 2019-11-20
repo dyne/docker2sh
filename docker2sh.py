@@ -80,6 +80,7 @@ def parse_instruction(inst, dfile=None):
         cmds.remove(ins)
         if '=' not in val:
             val = val.replace(' ', '=', 1)
+        val = val.replace('$', '\\$')
         return 'export %s\n' % val
 
     if ins == 'RUN':
